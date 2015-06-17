@@ -5,31 +5,58 @@ class MenuController
 
   def initialize
     @address_book = AddressBook.new
+
+    # each menu item's number, text, and associated method
+    @menu_data = [ { num: 1, text: "View all entries",    method: :view_all_entries  },
+                   { num: 2, text: "View entry #",        method: :view_entry_number },
+                   { num: 3, text: "Create an entry",     method: :create_entry      },
+                   { num: 4, text: "Search for an entry", method: :search_entries    },
+                   { num: 5, text: "Import from a CSV",   method: :read_csv          },
+                   { num: 6, text: "Exit",                method: :exit } ]
+
   end
 
   def main_menu
     puts "Main Menu - #{address_book.entries.count} entries"
-    num = 0
-    puts "#{num += 1} - View all entries"
-    puts "#{num += 1} - Create an entry"
-    puts "#{num += 1} - Search for an entry"
-    puts "#{num += 1} - Import entries from a CSV"
-    puts "#{num += 1} - Exit"
+
+    # display available options
+    @menu_data.each do |option|
+      puts "#{option[:num]} - #{option[:text]}"
+    end
+
     print "Enter your selection: "
 
     selection = gets.to_i
-    #puts "You picked #{selection}"
     puts ""
 
     process_input(selection)
   end
 
   def view_all_entries
-    address_book.entries.each do |entry|
-      system "clear"
-      puts entry.to_s
+    if address_book.entries.count > 0
+      address_book.entries.each do |entry|
+        system "clear"
+        puts entry.to_s
 
-      entry_submenu(entry)    
+        entry_submenu(entry)    
+      end
+    else
+      puts "No entries to view"
+    end
+  end
+
+  def view_entry_number
+    cnt = address_book.entries.count
+    if cnt > 0
+      print "Entry to view (1 - #{cnt}): "
+      selection = gets.to_i
+      if (1..cnt).include?(selection)
+        puts address_book.entries[selection - 1].to_s
+      else
+        puts "Invalid selction."
+      end
+    else
+      puts "No entries to view"
     end
   end
  
@@ -51,34 +78,36 @@ class MenuController
   end
  
   def search_entries
+    puts __method__
   end
  
   def read_csv
+    puts __method__
   end  
+
+  def exit
+    puts "Good-bye!"
+    exit!(true)
+  end
 
 private
 
+  # returns nil if input_num is invalid, index into @menu_data otherwise
+  def index_for_input(input_num)
+    @menu_data.index { |item| item[:num] == input_num }
+  end
+
   def process_input(input_num)
-    case input_num
-    when 1
-      view_all_entries
-      main_menu
-    when 2
-      create_entry
-      main_menu
-    when 3
-      search_entries
-      main_menu
-    when 4
-      read_csv
-      main_menu
-    when 5
-      puts "Good-bye!"
-      exit(0)
-    else
+    index = index_for_input(input_num)
+
+    if !index
       puts "Sorry, that is not a valid input"
-      main_menu
-    end # case
+    else
+      method = @menu_data[index][:method]
+      self.send(method)
+    end
+
+    main_menu
   end
 
   def entry_submenu(entry)
