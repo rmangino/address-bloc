@@ -252,4 +252,21 @@ RSpec.describe AddressBook do
     
   end # .import_from_csv
 
+  context ".delete_all_entires" do
+
+    it "should work when there are no entries" do
+      book.delete_all_entries
+      expect(book.entries.size).to eql(0)
+    end
+
+    it "should work when there are multiple entries" do
+      book.import_from_csv("entries.csv")
+      expect(book.entries.count).to be > 0
+      
+      book.delete_all_entries
+      expect(book.entries.size).to eql(0)
+    end
+
+  end # .delete_all_entries
+
 end

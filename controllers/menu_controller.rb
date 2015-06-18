@@ -7,12 +7,13 @@ class MenuController
     @address_book = AddressBook.new
 
     # each menu item's number, text, and associated method
-    @menu_data = [ { num: 1, text: "View all entries",    method: :view_all_entries  },
-                   { num: 2, text: "View entry #",        method: :view_entry_number },
-                   { num: 3, text: "Create an entry",     method: :create_entry      },
-                   { num: 4, text: "Search for an entry", method: :search_entries    },
-                   { num: 5, text: "Import from a CSV",   method: :read_csv          },
-                   { num: 6, text: "Exit",                method: :exit } ]
+    @menu_data = [ { num: 1, text: "View all entries",    method: :view_all_entries   },
+                   { num: 2, text: "View entry #",        method: :view_entry_number  },
+                   { num: 3, text: "Create an entry",     method: :create_entry       },
+                   { num: 4, text: "Search for an entry", method: :search_entries     },
+                   { num: 5, text: "Import from a CSV",   method: :read_csv           },
+                   { num: 6, text: "Delete all entries",  method: :delete_all_entires },
+                   { num: 7, text: "Exit",                method: :exit } ]
 
   end
 
@@ -111,6 +112,27 @@ class MenuController
     puts "#{entry.name} has been deleted"
   end
 
+  def delete_all_entires
+    if address_book.entries.count == 0
+      puts "There are no entries to delete"
+    else
+      print "Are you SURE you want to delete entries? (y/N): "
+      answer = gets.chomp
+  
+      if answer == 'y'
+        # I'd rather use: 
+        #  address_book.delete_all_entires
+
+        # My assumption is that I can't modify (delete elements) an array
+        # while enumerating that collection.
+        entries = address_book.entries.dup
+        for entry in entries 
+          delete_entry(entry)
+        end        
+      end
+    end
+  end
+
   def edit_entry(entry)
     print "Updated name: "
     name = gets.chomp
@@ -132,7 +154,7 @@ class MenuController
     print "Search by name: "
     name = gets.chomp
 
-    match = @address_book.binary_search(name)
+    match = address_book.binary_search(name)
     system "clear"
 
     if match

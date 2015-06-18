@@ -20,6 +20,10 @@ class AddressBook
     entries.insert(index, Entry.new(name, phone, email))
   end
 
+  def delete_all_entries
+    entries.clear
+  end
+
   def remove_entry(entry)
     entries.delete(entry)
   end
