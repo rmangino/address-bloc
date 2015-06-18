@@ -118,7 +118,7 @@ RSpec.describe AddressBook do
     context 'entries2.csv' do
 
       it "imports the correct number of entires" do
-        check_csv_entry_count("entries2.csv",  5)
+        check_csv_entry_count("entries2.csv",  3)
       end
 
       it "imports the 1st entry" do
@@ -126,19 +126,11 @@ RSpec.describe AddressBook do
       end
 
       it "imports the 2nd entry" do
-        check_csv_entry_number("entries2.csv",  1, "Dustin", "555-555-4646", "dustin@blocmail.com")
+        check_csv_entry_number("entries2.csv",  1, "Joe", "555-555-4854", "joe@blocmail.com")
       end
 
       it "imports the 3rd entry" do
-        check_csv_entry_number("entries2.csv",  2, "Joe", "555-555-4854", "joe@blocmail.com")
-      end
-
-      it "imports the 4th entry" do
-        check_csv_entry_number("entries2.csv",  3, "Kristy", "555-555-2036", "kristy@blocmail.com")
-      end
-
-      it "imports the 5th entry" do
-        check_csv_entry_number("entries2.csv",  4, "Reed", "555-555-5415", "reed@blocmail.com")
+        check_csv_entry_number("entries2.csv",  2, "Reed", "555-555-5415", "reed@blocmail.com")
       end
 
     end # entries.csv
