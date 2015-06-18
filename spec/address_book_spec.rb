@@ -12,6 +12,20 @@ RSpec.describe AddressBook do
     expect(entry.email).to eql expected_email
   end
 
+  def check_csv_entry_count(csv_file_name, expected_entry_count)
+    book.import_from_csv(csv_file_name)
+
+    # Did we correctly read in the correct number of entries?
+    expect(book.entries.size).to eq(expected_entry_count)
+  end
+
+  def check_csv_entry_number(csv_file_name, entry_index, name, phone, email)
+    book.import_from_csv(csv_file_name)
+    entry_one = book.entries[entry_index]
+
+    check_entry(entry_one, name, phone, email)
+  end
+
   # Tests
 
   context "attributes" do
@@ -73,48 +87,62 @@ RSpec.describe AddressBook do
 
   context '.import_from_csv' do
 
-    it "imports the correct number of entires" do
-      book.import_from_csv("entries.csv")
-      book_size = book.entries.size
+    context 'entries.csv' do
 
-      # Did we correctly read in 5 entries?
-      expect(book_size).to eq(5)
-    end
+      it "imports the correct number of entires" do
+        check_csv_entry_count("entries.csv",  5)
+      end
 
-    it "imports the 1st entry" do
-      book.import_from_csv("entries.csv")
-      entry_one = book.entries[0]
+      it "imports the 1st entry" do
+        check_csv_entry_number("entries.csv",  0, "Bill", "555-555-4854", "bill@blocmail.com")
+      end
 
-      check_entry(entry_one, "Bill", "555-555-4854", "bill@blocmail.com")
-    end
+      it "imports the 2nd entry" do
+        check_csv_entry_number("entries.csv",  1, "Bob", "555-555-5415",  "bob@blocmail.com")
+      end
 
-    it "imports the 2nd entry" do
-       book.import_from_csv("entries.csv")
-       
-       entry_two = book.entries[1]
-       check_entry(entry_two, "Bob", "555-555-5415", "bob@blocmail.com")
-     end
- 
-     it "imports the 3rd entry" do
-       book.import_from_csv("entries.csv")
-       
-       entry_three = book.entries[2]
-       check_entry(entry_three, "Joe", "555-555-3660", "joe@blocmail.com")
-     end
- 
-     it "imports the 4th entry" do
-       book.import_from_csv("entries.csv")
-       
-       entry_four = book.entries[3]
-       check_entry(entry_four, "Sally", "555-555-4646", "sally@blocmail.com")
-     end
- 
-     it "imports the 5th entry" do
-       book.import_from_csv("entries.csv")
-       
-       entry_five = book.entries[4]
-       check_entry(entry_five, "Sussie", "555-555-2036", "sussie@blocmail.com")
-     end
+      it "imports the 3rd entry" do
+        check_csv_entry_number("entries.csv",  2, "Joe", "555-555-3660", "joe@blocmail.com")
+      end
+
+      it "imports the 4th entry" do
+        check_csv_entry_number("entries.csv",  3, "Sally", "555-555-4646", "sally@blocmail.com")
+      end
+
+      it "imports the 5th entry" do
+        check_csv_entry_number("entries.csv",  4, "Sussie", "555-555-2036", "sussie@blocmail.com")
+      end
+
+    end # entries.csv
+
+    context 'entries2.csv' do
+
+      it "imports the correct number of entires" do
+        check_csv_entry_count("entries2.csv",  5)
+      end
+
+      it "imports the 1st entry" do
+        check_csv_entry_number("entries2.csv",  0, "Bonnie", "555-555-3660", "bonnie@blocmail.com")
+      end
+
+      it "imports the 2nd entry" do
+        check_csv_entry_number("entries2.csv",  1, "Dustin", "555-555-4646", "dustin@blocmail.com")
+      end
+
+      it "imports the 3rd entry" do
+        check_csv_entry_number("entries2.csv",  2, "Joe", "555-555-4854", "joe@blocmail.com")
+      end
+
+      it "imports the 4th entry" do
+        check_csv_entry_number("entries2.csv",  3, "Kristy", "555-555-2036", "kristy@blocmail.com")
+      end
+
+      it "imports the 5th entry" do
+        check_csv_entry_number("entries2.csv",  4, "Reed", "555-555-5415", "reed@blocmail.com")
+      end
+
+    end # entries.csv
+
     
   end # .import_from_csv
 
